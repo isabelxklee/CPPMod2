@@ -105,13 +105,14 @@ vector<Bid> loadBids(string csvPath) {
             // push this bid to the end
             bids.push_back(bid);
         }
-    } catch (csv::Error &e) {
+    }
+    catch (csv::Error& e) {
         std::cerr << e.what() << std::endl;
     }
     return bids;
 }
 
-// Implement the quick sort logic over bid.title
+// FIXME (2a): Implement the quick sort logic over bid.title
 
 /**
  * Partition the vector of bids into two parts, low and high
@@ -127,13 +128,17 @@ int partition(vector<Bid>& bids, int begin, int end) {
     string Pivot = bids[middlePoint].title;
     bool done = false;
 
-   // Set Pivot as middlePoint element title to compare (string)  
-  
+   
+
+    // Set Pivot as middlePoint element title to compare (string)  
+
     while (!done) {
         while (bids[low].title < Pivot) {
+            cout << low << " " << high << endl;
             ++low;
         }
         while (Pivot < bids[high].title) {
+            cout << low << " " << high << endl;
             --high;
         }
         if (low >= high) {
@@ -149,16 +154,16 @@ int partition(vector<Bid>& bids, int begin, int end) {
         }
 
         // keep incrementing low index while bids[low].title < Pivot
-       
+
         // keep decrementing high index while Pivot < bids[high].title
 
         /* If there are zero or one elements remaining,
             all bids are partitioned. Return high */
-       // else swap the low and high bids (built in vector method)
-            // move low and high closer ++low, --high
+            // else swap the low and high bids (built in vector method)
+                 // move low and high closer ++low, --high
 
-
-    return high;
+        return high;
+    }
 }
 
 /**
@@ -171,33 +176,29 @@ int partition(vector<Bid>& bids, int begin, int end) {
  * @param end the ending index to sort on
  */
 void quickSort(vector<Bid>& bids, int begin, int end) {
-    int mid = 0;
-    //set mid equal to 0
-
-    if (bids.size() <= 1) {
-        return;
-    } else if (begin >= end) {
-        return;
-    } else {
-   
-        if (begin >= end) {
-            return;
-        }
-
-        begin = partition(bids, begin, end);
-    }
-
     /* Base case: If there are 1 or zero bids to sort,
      partition is already sorted otherwise if begin is greater
      than or equal to end then return*/
 
-    /* Partition bids into low and high such that
-     midpoint is location of last element in low */
-     
-    // recursively sort low partition (begin to mid)
+     /* Partition bids into low and high such that
+      midpoint is location of last element in low */
 
-    // recursively sort high partition (mid+1 to end)
+      // recursively sort low partition (begin to mid)
 
+      // recursively sort high partition (mid+1 to end)
+
+    /*if (begin >= end) {
+        return;
+    }*/
+
+    if (begin < end) {
+        int mid = partition(bids, begin, end);
+
+        quickSort(bids, begin, mid);
+        quickSort(bids, mid + 1, end);
+    }
+
+    return;
 }
 
 // Implement the selection sort logic over bid.title
@@ -211,17 +212,23 @@ void quickSort(vector<Bid>& bids, int begin, int end) {
  *            instance to be sorted
  */
 void selectionSort(vector<Bid>& bids) {
+    //define min as int (index of the current minimum bid)
+
     int min = 0;
     Bid temp;
     size_t result = bids.size();
 
-    // pos is the position within bids that divides sorted/unsorted
+    // check size of bids vector
+    // set size_t platform-neutral result equal to bid.size()
 
-        // for size_t pos = 0 and less than size -1 
+    // pos is the position within bids that divides sorted/unsorted
+    // for size_t pos = 0 and less than size -1 
         // set min = pos
         // loop over remaining elements to the right of position
             // if this element's title is less than minimum title
                 // this element becomes the minimum
+        // swap the current minimum with smaller one found
+            // swap is a built in vector method
 
     for (size_t pos = 0; pos < result; ++pos) {
         min = pos;
@@ -310,7 +317,7 @@ int main(int argc, char* argv[]) {
 
             break;
 
-        // FIXME (1b): Invoke the selection sort and report timing results
+            // Invoke the selection sort and report timing results
         case 3:
             ticks = clock();
 
@@ -318,7 +325,7 @@ int main(int argc, char* argv[]) {
 
             cout << bids.size() << " bids sorted" << endl;
 
-            ticks = clock() - ticks; // current clock ticks minus starting clock ticks
+            ticks = clock() - ticks;
 
             cout << "time: " << ticks << " clock ticks" << endl;
             cout << "time: " << ticks * 1.0 / CLOCKS_PER_SEC << " seconds" << endl;
@@ -331,15 +338,15 @@ int main(int argc, char* argv[]) {
 
             break;
 
-        // FIXME (2b): Invoke the quick sort and report timing results
+            // Invoke the quick sort and report timing results
         case 4:
             ticks = clock();
 
-            quickSort(bids, 0, 10);
+            quickSort(bids, 0, 100);
 
             cout << bids.size() << " bids sorted" << endl;
 
-            ticks = clock() - ticks; // current clock ticks minus starting clock ticks
+            ticks = clock() - ticks;
 
             cout << "time: " << ticks << " clock ticks" << endl;
             cout << "time: " << ticks * 1.0 / CLOCKS_PER_SEC << " seconds" << endl;
