@@ -124,21 +124,17 @@ vector<Bid> loadBids(string csvPath) {
 int partition(vector<Bid>& bids, int begin, int end) {
     int low = begin;
     int high = end;
-    int middlePoint = (high - low) / 2;
-    string Pivot = bids[middlePoint].title;
+    int pivotIndex = low + (high - low) / 2;
     bool done = false;
-
-   
 
     // Set Pivot as middlePoint element title to compare (string)  
 
     while (!done) {
-        while (bids[low].title < Pivot) {
-            cout << low << " " << high << endl;
+        while (bids[low].title < bids[pivotIndex].title) {
+        /*while (bids[low].title < bids[pivotIndex].title) {*/
             ++low;
         }
-        while (Pivot < bids[high].title) {
-            cout << low << " " << high << endl;
+        while (bids[pivotIndex].title < bids[high].title) {
             --high;
         }
         if (low >= high) {
@@ -176,6 +172,7 @@ int partition(vector<Bid>& bids, int begin, int end) {
  * @param end the ending index to sort on
  */
 void quickSort(vector<Bid>& bids, int begin, int end) {
+    int mid = 0;
     /* Base case: If there are 1 or zero bids to sort,
      partition is already sorted otherwise if begin is greater
      than or equal to end then return*/
@@ -187,18 +184,14 @@ void quickSort(vector<Bid>& bids, int begin, int end) {
 
       // recursively sort high partition (mid+1 to end)
 
-    /*if (begin >= end) {
+    if (begin >= end) {
         return;
-    }*/
-
-    if (begin < end) {
-        int mid = partition(bids, begin, end);
-
-        quickSort(bids, begin, mid);
-        quickSort(bids, mid + 1, end);
     }
 
-    return;
+    mid = partition(bids, begin, end);
+
+    quickSort(bids, begin, mid);
+    quickSort(bids, mid + 1, end);
 }
 
 // Implement the selection sort logic over bid.title
@@ -330,9 +323,9 @@ int main(int argc, char* argv[]) {
             cout << "time: " << ticks << " clock ticks" << endl;
             cout << "time: " << ticks * 1.0 / CLOCKS_PER_SEC << " seconds" << endl;
 
-            /*for (int i = 0; i < 100; ++i) {
+            for (int i = 0; i < 100; ++i) {
                 displayBid(bids[i]);
-            }*/
+            }
 
             cout << endl;
 
@@ -342,7 +335,7 @@ int main(int argc, char* argv[]) {
         case 4:
             ticks = clock();
 
-            quickSort(bids, 0, 100);
+            quickSort(bids, 0, bids.size() - 1);
 
             cout << bids.size() << " bids sorted" << endl;
 
@@ -350,6 +343,10 @@ int main(int argc, char* argv[]) {
 
             cout << "time: " << ticks << " clock ticks" << endl;
             cout << "time: " << ticks * 1.0 / CLOCKS_PER_SEC << " seconds" << endl;
+
+            for (int i = 0; i < 100; ++i) {
+                displayBid(bids[i]);
+            }
 
             cout << endl;
 
